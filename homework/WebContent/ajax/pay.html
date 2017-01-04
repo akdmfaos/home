@@ -1,0 +1,81 @@
+ 
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="./httpRequest.js"></script>
+    <script type="text/javascript">
+    
+    // 서버로 요청 전송
+    function send(id, passwd) {
+        log("send() 함수 호출"); // 처리 단계 기록
+        log("ID: " + id + "    PASSWD: " + passwd);
+
+ 
+        var params = "id="+encodeURIComponent(id);
+        log("params: " + params);
+        params = params + "&passwd="+encodeURIComponent(passwd);
+         
+        // 태그중에 "payList"을 찾아 옵니다.
+        var newsList = document.getElementById("payList");
+        newsList.innerHTML=""; // 태그의 내용 삭제
+            
+        sendRequest("pay.jsp", params, response, "post");
+    }
+    
+    function response() {
+        if (httpRequest.readyState == 4) { // 전송을 전부 받았다면
+            if (httpRequest.status == 200) { // 요청한 서버 파일이 실행 됐다면
+                
+                var payList = document.getElementById("payList");
+ 
+                payList.innerHTML = httpRequest.responseText;
+            }else{
+             alert("서버에러"+httpRequest.status);
+            }
+            
+        }
+    }
+ 
+    </script>
+    <style type="text/css">
+    .style9 {font-size: 16}
+    </style>
+</head>
+<body>
+<div id="debugConsole" 
+     style="border: 1px solid #000000; color:#00ff00; background:#000000 ">
+</div>
+ 
+<table width="790" border="1" align="center" cellpadding="5">
+  <tr>
+    <td height="34" align="center">
+    <span class="style9"> 급여 명세서 </span></td>
+  </tr>
+  <tr>
+    <td height="61">
+    
+    <!-- 결과 출력 태그 -->
+    <div id="payList"></div>
+   
+    <br>
+ 
+    <form name="news">
+        급여확인 로그인: <br><br>
+        
+        사원 ID:&nbsp;
+        <input type="text" name="id" value="test">        
+        
+            
+        패스워드:  
+        <input type="password" name="passwd" value="1234">
+        
+        <input type="button" name="cmdRefresh" 
+        value="급여 확인" onclick="send(this.form.id.value, this.form.passwd.value)" />
+    </form>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

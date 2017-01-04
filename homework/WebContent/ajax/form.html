@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<HTML>
+ <HEAD>
+  <TITLE> form.jsp </TITLE>
+  <script type="text/javascript" src="./httpRequest.js"></script>
+  <script type="text/javascript">
+  
+    function ecd(field){
+   return encodeURIComponent(field.value);
+}
+ 
+    // 서버로 요청 전송
+    function send(f) {
+   //alert(ecd(f.stuname));
+        var params = "stuname="+ecd(f.stuname);
+        params = params + "&address="+ecd(f.address);
+        params = params + "&subject="+ecd(f.subject);
+        params = params + "&score=" + f.score.value;
+        params = params + "&subject2="+ecd(f.subject2);
+        params = params + "&score2=" + f.score2.value;
+ 
+        // 태그중에 "payList"을 찾아 옵니다.
+        var panel = document.getElementById("displayPanel");
+        panel.innerHTML = "";
+            
+        // 인수1: 서버로 요청하는 파일명, jsp, servlet
+        // 인수2: 파라미터 목록
+        // 인수3: 응답 처리 메소드, 함수 이름
+        // 인수4: 전송방식(post, get)
+        // response = response(){ }
+        sendRequest("./proc.jsp", params, response, "post");
+    }
+ 
+    function response() {
+        // alert('httpRequest.readyState: ' + httpRequest.readyState + '\n\n httpRequest.status: ' + httpRequest.status);
+        
+        if (httpRequest.readyState == 4) { // 전송을 전부 받았다면
+            if (httpRequest.status == 200) { // 요청한 서버 파일이 실행 됐다면
+                
+                // 태그중에 "newsList"을 찾아 옵니다.
+                var panel = document.getElementById("displayPanel");
+ 
+                // 서버로부터 전송된 문자열
+                // div 태그의 값으로 responseText값을 할당합니다.
+                panel.innerHTML = httpRequest.responseText;
+            }
+        }
+    }
+        
+  </script>
+ </HEAD>
+ 
+ <BODY>
+ <table width="500" height="200" align = "center" border="2">
+ <tr>
+ <td>
+ 
+ <div align="center">성적 처리</div>
+ <FORM name="frmSungjuk" action="">
+     성명: <INPUT TYPE="text" NAME="stuname" value="가길동"><br>
+     주소: <INPUT TYPE="text" NAME="address" SIZE="30" value="인천시 남동구"><br>
+     과목: <INPUT TYPE="text" NAME="subject" SIZE="30" value="JAVA"><br>
+     점수: <INPUT TYPE="text" NAME="score" SIZE="20" value="95"><br>
+     과목2: <INPUT TYPE="text" NAME="subject2" SIZE="30" value="JSP"><br>
+     점수2: <INPUT TYPE="text" NAME="score2" SIZE="20" value="80"><br>
+     <div align="center">
+         <input type="button" value="성적 계산" 
+                onclick="send(this.form)">
+     </div>
+ </FORM> </td>
+ </tr>
+ <tr>
+ <td>
+ <br>
+ <div id="displayPanel"></div> 
+ </td>
+ </tr>
+ </table>
+ 
+</BODY>
+</HTML>

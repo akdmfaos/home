@@ -65,7 +65,6 @@ String root = request.getContextPath();
 
     </div>
 </div>
-</div>
 
 </body>
 </html>

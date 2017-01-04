@@ -16,8 +16,9 @@ body {font-family: Verdana,sans-serif;margin:0}
   max-width: 1800px;
   position: relative;
   margin: 1px;
-  
 }
+
+
 
 /* Next & previous buttons */
 .prev, .next {

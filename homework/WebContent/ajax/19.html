@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="./httpRequest.js"></script>
+<script type="text/javascript">
+	function ecd(field) {
+		return encodeURIComponent(field.value);
+	}
+	function send(f) {
+		var params = "vacname=" + ecd(f.vacname);
+		var panel = document.getElementById("map");
+		panel.innerHTML = "";
+
+		sendRequest("./vacation_proc.jsp", params, response, "post")
+
+		function response() {
+			if (httpRequest.readyState == 4) {
+				if (httpRequest.status == 200) {
+
+					var panel = document.getElementById("map");
+
+					panel.innerHTML = httpRequest.responseText;
+				} else {
+
+					alert(httpRequest.status);
+				}
+			}
+		}
+	}
+	function send1(checkbox) {
+
+		var params = "checkbox=" + checkbox.value;
+
+		alert(params);
+		var panel = document.getElementById("info");
+		panel.innerHTML = "";
+
+		sendRequest("./vacation_detail.jsp", params, response, "post")
+
+		function response() {
+			if (httpRequest.readyState == 4) {
+				if (httpRequest.status == 200) {
+
+					var panel = document.getElementById("info");
+					str = str + httpRequest.responseText;
+					panel.innerHTML = str;
+				} else {
+
+					alert(httpRequest.status);
+				}
+			}
+		}
+	}
+	function send2(checkbox) {
+		var obj = document.getElementsByName("checkbox");
+		for (var i = 0; i < obj.length; i++) {
+			if (obj[i] != checkbox) {
+				obj[i].checked = false;
+			}
+		}
+		var params = "checkbox=" + checkbox.value;
+		var panel = document.getElementById("info");
+		panel.innerHTML = "";
+
+		sendRequest("vacation_detail.jsp", params, response, "post")
+
+		function response() {
+			if (httpRequest.readyState == 4) {
+				if (httpRequest.status == 200) {
+
+					var panel = document.getElementById("info");
+
+					panel.innerHTML = httpRequest.responseText;
+				} else {
+
+					alert(httpRequest.status);
+				}
+			}
+		}
+	}
+	function send_1(f) {
+
+		var params = "vacname=" + ecd(f.vacname);
+		var panel = document.getElementById("map");
+		panel.innerHTML = "";
+
+		sendRequest("./vacation_proc.jsp", params, response, "post")
+
+		function response() {
+			if (httpRequest.readyState == 4) {
+				if (httpRequest.status == 200) {
+					var dive = document.getElementById("map");
+					var elem = httpRequest.responseText.split("\n");
+					var elem1= elem[1].split(",");
+
+					for (var i = 0; i < elem.length; i++) {
+						var inputel = document.createElement("input");
+						inputel.type = "checkbox";
+						inputel.name = "checkbox";
+						inputel.value = elem1[i];
+						inputel.onchange = function() {
+							send2(this);
+						}
+						var texte = document.createTextNode(elem1[i]);
+						dive.appendChild(inputel);
+						dive.appendChild(texte);
+					}
+
+				} else {
+
+					alert(httpRequest.status);
+				}
+			}
+		}
+	}
+</script>
+</head>
+<body>
+	<div align="center">
+		<h1>계절</h1>
+		<FORM name="frmSungjuk" action="">
+			계절:<br> <INPUT TYPE="text" NAME="vacname" value=""><br>
+			(봄,여름,가을,겨울) <br> <br>
+			<div id="map"></div>
+			<div id="info"></div>
+
+			<div align="center">
+				<input type="button" value="출력" onclick="send_1(this.form)">
+			</div>
+		</FORM>
+	</div>
+
+
+	<script type="text/javascript">
+		function check_only(chk) {
+			var obj = document.getElementsByName("chkbox");
+			for (var i = 0; i < obj.length; i++) {
+				if (obj[i] != chk) {
+					obj[i].checked = false;
+				}
+			}
+		}
+	</script>
+
+</body>
+</html>

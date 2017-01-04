@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="./httpRequest.js"></script>
+<script type="text/javascript">
+function check_only(chk){
+    var obj = document.getElementsByName("chkbox");
+    for(var i=0; i<obj.length; i++){
+        if(obj[i] != chk){
+            obj[i].checked = false;
+        }
+    }
+}
+function seasonDetail(i){	
+	var params = "island="+encodeURIComponent(i.value); //한글처리 
+	//alert(params);
+	sendRequest("vacation_detail.jsp",params, response_detail,"post");
+}
+function sendSeason(season){
+	var params = "season="+encodeURIComponent(season);
+	//alert(params);
+	sendRequest("vacation_proc.jsp",params, response,"post");
+	
+}
+function response_detail(){
+	if(httpRequest.readyState==4){
+		if(httpRequest.status==200){
+			var dive= document.getElementById("display_island");
+			dive.innerHTML="";
+			dive.innerHTML = httpRequest.responseText;
+		}
+	}
+}
+function response(){
+	if(httpRequest.readyState==4){
+		if(httpRequest.status==200){
+			var dive= document.getElementById("display");
+			dive.innerHTML="";
+			var result = httpRequest.responseText;
+			//alert(result);  on 이오면 이벤트 오른쪽에 핸들러가 와야한다.
+			var elem = result.split(',');
+			for(var i=0; i<elem.length; i++){
+				var inputel = document.createElement("input");
+			    
+		        inputel.type ='checkbox';
+		        inputel.value = elem[i];
+		        inputel.name = 'chkbox';
+		        inputel.onclick= function(){check_only(this)};
+		        inputel.onchange= function(){seasonDetail(this)};
+		        var texte = document.createTextNode(elem[i]);
+		        dive.appendChild(inputel);
+		        dive.appendChild(texte);
+			}    
+		}else{
+			alert("서버에러:"+httpRequest.status)
+		}
+	}
+}
+</script>
+<style type="text/css"> 
+*{ 
+  font-family: gulim; 
+  font-size: 20px; 
+} 
+</style> 
+<link href="${pageContext.request.contextPath}/css/style.css" rel="Stylesheet" type="text/css">
+</head>
+<body>
+<div class="content">
+<form name="frm">
+계절을 입력하세요(봄,여름,가을,겨울)
+<input type="text" name="season">
+<button type="button" onclick="sendSeason(this.form.season.value)">입력</button>
+<hr>
+<div id="display"></div>
+<hr>
+<div id="display_island"></div>
+</form>
+</div>
+</body>
+</html>
